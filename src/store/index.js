@@ -1,11 +1,28 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue'
+import Vuex from 'vuex'
+import VuexPersistence from 'vuex-persist' //vuex持久化存储
+import mutations from './mutations'
+import state from './state'
+import * as getters from './getters'
+import actions from './actions'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
+
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage,
+  reducer: stateData => ({
+    // eslint-disable-line
+    logined: stateData.logined,
+    user: stateData.user,
+    auths: stateData.auths,
+  }),
+})
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {}
-});
+  state,
+  getters,
+  mutations,
+  actions,
+  plugins: [vuexLocal.plugin],
+  strict: process.env.NODE_ENV !== 'production',
+})
